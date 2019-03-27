@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package task;
+
+option (gogoproto.testgen_all)  = true;
+option (gogoproto.benchgen_all) = true;
+option (gogoproto.populate_all) = true;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+message Applicants {
+	string ID                           = 1;
+	string Status                       = 2; // TODO should be enum
+	repeated string Answers             = 3;
+}
+
+message Price {
+	double Side                         = 1;
+	string Currency                     = 2; // TODO should be enum
+	double Sider                        = 3;
+}
+
+message Info {
+	string TranslatedName               = 1;
+	string Description                  = 2;
+	string TranslatedCategory           = 3;
+}
+
+message Type {
+	string Category                     = 1;
+	string Key                          = 2;
+
+	Info Fr                             = 3;
+	Info En                             = 4;
+}
+
+message T {
+	string ID                           = 1;
+
+	string Name                         = 2;
+	Type Type                           = 3 [(gogoproto.nullable) = false];
+
+	string Country                      = 4;
+	Price Pricing                       = 5 [(gogoproto.nullable) = false];
+
+	google.protobuf.Timestamp CreatedAt = 6 [(gogoproto.stdtime) = true,(gogoproto.nullable) = false];
+	google.protobuf.Timestamp UpdatedAt = 7 [(gogoproto.stdtime) = true,(gogoproto.nullable) = false];
+
+	string Description                  = 8;
+	repeated Applicants Applicants      = 9 [(gogoproto.nullable) = false];
+}

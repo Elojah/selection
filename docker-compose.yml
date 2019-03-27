@@ -1,0 +1,10 @@
+version: "3"
+services:
+
+  # MongoDB
+  mongo:
+    build: docker/mongo
+    volumes:
+      - ./docker/mongo/mongod.conf:/usr/local/etc/mongod.conf
+    ports:
+      - 27017:27017

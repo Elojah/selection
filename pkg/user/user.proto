@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package user;
+
+option (gogoproto.testgen_all)  = true;
+option (gogoproto.benchgen_all) = true;
+option (gogoproto.populate_all) = true;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+message U {
+	string ID                           = 1;
+
+	google.protobuf.Timestamp CreatedAt = 2 [(gogoproto.stdtime) = true,(gogoproto.nullable) = false];
+	google.protobuf.Timestamp UpdatedAt = 3 [(gogoproto.stdtime) = true,(gogoproto.nullable) = false];
+
+	string FirstName                    = 4;
+	string LastName                     = 5;
+
+	repeated string Tags                = 6;
+
+	repeated string TaskApplications    = 7;
+}
