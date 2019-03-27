@@ -56,7 +56,7 @@ api:
 .PHONY: import
 import:
 	$(info $(M) running import…) @
-	$Q cd docker/mongo && sh import.sh
+	$Q cd docker/mongo && mongorestore dump
 
 .PHONY: proto
 proto:
