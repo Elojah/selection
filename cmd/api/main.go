@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/elojah/selection/pkg/user/srg"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -33,7 +34,8 @@ func run(prog string, filename string) {
 		return
 	}
 
-	_ = mclient
+	userStore := srg.Store{}
+	userStore.Up(mclient)
 }
 
 func main() {

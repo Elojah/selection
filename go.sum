@@ -1,3 +1,5 @@
+github.com/coreos/fleet v1.0.0 h1:xyIHQvFdFW3G36HL3qMWsQLQ0OWbh7KvcRrwqF0dNeg=
+github.com/coreos/fleet v1.0.0/go.mod h1:dcu9wb9bWRsaZDUDBAyl/qApKloFe+yoeC3M8dV6FYA=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/elojah/game_01 v0.0.2 h1:2E1saqLcTuozW/R+Mts/xKM9ppMawpTIXUTbnbmYKrU=
