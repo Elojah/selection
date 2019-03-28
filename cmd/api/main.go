@@ -43,6 +43,9 @@ func run(prog string, filename string) {
 		log.Error().Err(err).Msg("failed to init http handler")
 		return
 	}
+
+	// TODO handle SIG*
+	select {}
 }
 
 func main() {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 
 	merrors "github.com/elojah/selection/pkg/errors"
@@ -36,7 +37,7 @@ func (h *Handler) Users(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// #Format and respond user
-	raw, err := u.Marshal()
+	raw, err := json.Marshal(u)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to marshal response")
 		http.Error(w, "formatting failure", http.StatusInternalServerError)

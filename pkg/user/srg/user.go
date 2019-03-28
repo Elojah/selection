@@ -9,10 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-const (
-	layout = "2006-01-02T15:04:05.000Z"
-)
-
 // GetUserAll implemented with mongodb.
 func (s *Store) GetUserAll(ctx context.Context) ([]user.U, error) {
 	return nil, merrors.ErrNotImplemented{}
@@ -30,35 +26,21 @@ func (s *Store) GetUser(ctx context.Context, id string) (user.U, error) {
 }
 
 type mongoUser struct {
-	ID        string `json:"_id"`
-	CreatedAt struct {
-		Date string `json:"$date"`
-	} `json:"createdAt"`
-	UpdatedAt struct {
-		Date string `json:"$date"`
-	} `json:"updatedAt"`
-	FirstName        string   `json:"firstName"`
-	LastName         string   `json:"lastName"`
-	Tags             []string `json:"tags"`
-	TaskApplications []string `json:"taskApplications"`
+	ID               string    `bson:"_id"`
+	CreatedAt        time.Time `bson:"createdAt"`
+	UpdatedAt        time.Time `bson:"updatedAt"`
+	FirstName        string    `bson:"firstName"`
+	LastName         string    `bson:"lastName"`
+	Tags             []string  `bson:"tags"`
+	TaskApplications []string  `bson:"taskApplications"`
 }
 
 // Domain converts a mongodb user into a domain user.
 func (u *mongoUser) Domain() (user.U, error) {
-	cat, err := time.Parse(layout, u.CreatedAt.Date)
-	if err != nil {
-		return user.U{}, err
-	}
-
-	uat, err := time.Parse(layout, u.UpdatedAt.Date)
-	if err != nil {
-		return user.U{}, err
-	}
-
 	return user.U{
 		ID:               u.ID,
-		CreatedAt:        cat,
-		UpdatedAt:        uat,
+		CreatedAt:        u.CreatedAt,
+		UpdatedAt:        u.UpdatedAt,
 		FirstName:        u.FirstName,
 		LastName:         u.LastName,
 		Tags:             u.Tags,
