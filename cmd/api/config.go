@@ -13,6 +13,8 @@ type Config struct {
 	Address string `json:"address"`
 	Cert    string `json:"cert"`
 	Key     string `json:"key"`
+
+	Scorer string `json:"scorer"`
 }
 
 // Populate reads file as JSON and populate config.

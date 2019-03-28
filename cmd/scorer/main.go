@@ -54,7 +54,7 @@ func run(prog string, filename string) {
 	h.UserStore = userStore
 	h.TaskStore = taskStore
 	h.TaskTagStore = taskStore
-	if err := h.Dial(c); err != nil {
+	if err := h.Up(c); err != nil {
 		log.Error().Err(err).Msg("failed to init grpc handler")
 		return
 	}

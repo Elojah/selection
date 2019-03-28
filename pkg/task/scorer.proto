@@ -18,11 +18,14 @@ message ScorerRequest {
 }
 
 message Score {
-	string UserID         = 1;
+	string SiderID        = 1;
 	double Score          = 2;
+	string FirstName      = 3;
+	string LastName       = 4;
+
 }
 
 message ScorerReply {
 	string TaskID         = 1;
-	repeated Score Scores = 2 [(gogoproto.nullable) = false];;
+	repeated Score Scores = 2 [(gogoproto.nullable) = false];
 }

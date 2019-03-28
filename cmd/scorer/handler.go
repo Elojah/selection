@@ -24,8 +24,8 @@ func NewHandler(ctx context.Context) *Handler {
 	return &Handler{ctx: ctx}
 }
 
-// Dial starts the score server.
-func (h *Handler) Dial(c Config) error {
+// Up starts the score server.
+func (h *Handler) Up(c Config) error {
 	lis, err := net.Listen("tcp", c.Port)
 	if err != nil {
 		return err

@@ -38,8 +38,10 @@ func (h *Handler) Calculate(ctx context.Context, r *task.ScorerRequest) (*task.S
 			continue
 		}
 		reply.Scores[i] = task.Score{
-			UserID: applicant.ID,
-			Score:  matchTags(u.Tags, tags),
+			SiderID:   applicant.ID,
+			Score:     matchTags(u.Tags, tags),
+			FirstName: u.FirstName,
+			LastName:  u.LastName,
 		}
 	}
 

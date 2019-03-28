@@ -53,10 +53,12 @@ func run(prog string, filename string) {
 	h := NewHandler(ctx)
 	h.UserStore = userStore
 	h.TaskStore = taskStore
-	if err := h.Dial(c); err != nil {
+	h.TaskTagStore = taskStore
+	if err := h.Up(c); err != nil {
 		log.Error().Err(err).Msg("failed to init http handler")
 		return
 	}
+	defer func() { _ = h.Down() }()
 
 	// TODO handle SIG*
 	select {}

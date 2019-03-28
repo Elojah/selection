@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package task;
+
+option (gogoproto.testgen_all)  = true;
+option (gogoproto.benchgen_all) = true;
+option (gogoproto.populate_all) = true;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "scorer.proto";
+
+message Scores {
+	string TaskID                 = 1;
+	repeated Score Applicants     = 2 [(gogoproto.nullable) = false];
+	string Description            = 3;
+	string Country                = 4;
+	repeated string Tags          = 5;
+}

@@ -5,11 +5,12 @@ import (
 	"net/http"
 
 	merrors "github.com/elojah/selection/pkg/errors"
+	"github.com/elojah/selection/pkg/task"
 	"github.com/rs/zerolog/log"
 )
 
-// Tasks list all tasks for route /tasks.
-func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
+// Scores calculates scores for a task.
+func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		// continue
@@ -19,7 +20,7 @@ func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.URL.Query().Get("id")
-	logger := log.With().Str("route", "/task").Str("id", id).Str("method", "GET").Logger()
+	logger := log.With().Str("route", "/task/scores").Str("id", id).Str("method", "GET").Logger()
 
 	// #Check id parameter is not empty
 	if id == "" {
@@ -36,8 +37,31 @@ func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// #Retrieve associated tags
+	tags, err := h.TaskTagStore.GetTags(h.ctx, id)
+	if err != nil {
+		logger.Error().Err(err).Msg("failed to retrieve tags")
+		http.Error(w, "store failure", http.StatusInternalServerError)
+		return
+	}
+
+	// #Call scorer service to retrieve matches
+	resp, err := h.TaskScorer.Calculate(h.ctx, &task.ScorerRequest{TaskID: id})
+	if err != nil {
+		logger.Error().Err(err).Msg("failed to calculate scores")
+		http.Error(w, "calculation failure", http.StatusInternalServerError)
+		return
+	}
+	scores := task.Scores{
+		TaskID:      id,
+		Applicants:  resp.Scores,
+		Description: t.Description,
+		Country:     t.Country,
+		Tags:        tags,
+	}
+
 	// #Format and respond task
-	raw, err := json.Marshal(t)
+	raw, err := json.Marshal(scores)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to marshal response")
 		http.Error(w, "formatting failure", http.StatusInternalServerError)
