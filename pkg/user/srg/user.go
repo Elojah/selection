@@ -4,15 +4,9 @@ import (
 	"context"
 	"time"
 
-	merrors "github.com/elojah/selection/pkg/errors"
 	"github.com/elojah/selection/pkg/user"
 	"go.mongodb.org/mongo-driver/bson"
 )
-
-// GetUserAll implemented with mongodb.
-func (s *Store) GetUserAll(ctx context.Context) ([]user.U, error) {
-	return nil, merrors.ErrNotImplemented{}
-}
 
 // GetUser implemented with mongodb.
 func (s *Store) GetUser(ctx context.Context, id string) (user.U, error) {

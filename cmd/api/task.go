@@ -8,8 +8,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// Users list all users for route /users.
-func (h *Handler) Users(w http.ResponseWriter, r *http.Request) {
+// Tasks list all tasks for route /tasks.
+func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		// continue
@@ -19,7 +19,7 @@ func (h *Handler) Users(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.URL.Query().Get("id")
-	logger := log.With().Str("route", "/user").Str("id", id).Str("method", "GET").Logger()
+	logger := log.With().Str("route", "/task").Str("id", id).Str("method", "GET").Logger()
 
 	// #Check id parameter is not empty
 	if id == "" {
@@ -28,15 +28,15 @@ func (h *Handler) Users(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// #Retrieve user by id
-	u, err := h.UserStore.GetUser(h.ctx, id)
+	// #Retrieve task by id
+	u, err := h.TaskStore.GetTask(h.ctx, id)
 	if err != nil {
-		logger.Error().Err(err).Msg("failed to retrieve user")
+		logger.Error().Err(err).Msg("failed to retrieve task")
 		http.Error(w, "store failure", http.StatusInternalServerError)
 		return
 	}
 
-	// #Format and respond user
+	// #Format and respond task
 	raw, err := json.Marshal(u)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to marshal response")

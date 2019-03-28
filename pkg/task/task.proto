@@ -31,8 +31,8 @@ message Type {
 	string Category                     = 1;
 	string Key                          = 2;
 
-	Info Fr                             = 3;
-	Info En                             = 4;
+	Info Fr                             = 3 [(gogoproto.nullable) = false];;
+	Info En                             = 4 [(gogoproto.nullable) = false];;
 }
 
 message T {

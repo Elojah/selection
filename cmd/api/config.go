@@ -7,8 +7,8 @@ import (
 
 // Config is the udp server structure config.
 type Config struct {
-	MongoDBURL   string `json:"mongodb_url"`
-	MongoTimeout int    `json:"mongodb_timeout"`
+	MongoURL     string `json:"mongo_url"`
+	MongoTimeout int    `json:"mongo_timeout"`
 
 	Address string `json:"address"`
 	Cert    string `json:"cert"`

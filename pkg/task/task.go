@@ -1,6 +1,8 @@
 package task
 
+import "context"
+
 // Store to retrieve task by ID.
 type Store interface {
-	GetTask(id string) (T, error)
+	GetTask(context.Context, string) (T, error)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/elojah/selection/pkg/task"
 	"github.com/elojah/selection/pkg/user"
 
 	"github.com/rs/zerolog/log"
@@ -15,6 +16,7 @@ type Handler struct {
 	ctx context.Context
 
 	UserStore user.Store
+	TaskStore task.Store
 }
 
 // NewHandler returns a handler with context.
@@ -26,7 +28,7 @@ func NewHandler(ctx context.Context) *Handler {
 func (h *Handler) Dial(c Config) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/user", h.Users)
-	// mux.HandleFunc("/task/{id}", h.Tasks)
+	mux.HandleFunc("/task", h.Tasks)
 	// mux.HandleFunc("/task/{id}/match", h.Match)
 
 	h.srv = &http.Server{
