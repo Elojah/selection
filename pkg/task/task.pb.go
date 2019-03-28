@@ -42,7 +42,7 @@ type Applicants struct {
 func (m *Applicants) Reset()      { *m = Applicants{} }
 func (*Applicants) ProtoMessage() {}
 func (*Applicants) Descriptor() ([]byte, []int) {
-	return fileDescriptor_task_5b1534b360f0aabf, []int{0}
+	return fileDescriptor_task_fc5602da2c25e8b7, []int{0}
 }
 func (m *Applicants) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -103,7 +103,7 @@ type Price struct {
 func (m *Price) Reset()      { *m = Price{} }
 func (*Price) ProtoMessage() {}
 func (*Price) Descriptor() ([]byte, []int) {
-	return fileDescriptor_task_5b1534b360f0aabf, []int{1}
+	return fileDescriptor_task_fc5602da2c25e8b7, []int{1}
 }
 func (m *Price) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -164,7 +164,7 @@ type Info struct {
 func (m *Info) Reset()      { *m = Info{} }
 func (*Info) ProtoMessage() {}
 func (*Info) Descriptor() ([]byte, []int) {
-	return fileDescriptor_task_5b1534b360f0aabf, []int{2}
+	return fileDescriptor_task_fc5602da2c25e8b7, []int{2}
 }
 func (m *Info) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -226,7 +226,7 @@ type Type struct {
 func (m *Type) Reset()      { *m = Type{} }
 func (*Type) ProtoMessage() {}
 func (*Type) Descriptor() ([]byte, []int) {
-	return fileDescriptor_task_5b1534b360f0aabf, []int{3}
+	return fileDescriptor_task_fc5602da2c25e8b7, []int{3}
 }
 func (m *Type) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -300,7 +300,7 @@ type T struct {
 func (m *T) Reset()      { *m = T{} }
 func (*T) ProtoMessage() {}
 func (*T) Descriptor() ([]byte, []int) {
-	return fileDescriptor_task_5b1534b360f0aabf, []int{4}
+	return fileDescriptor_task_fc5602da2c25e8b7, []int{4}
 }
 func (m *T) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -2232,9 +2232,9 @@ var (
 	ErrIntOverflowTask   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("task.proto", fileDescriptor_task_5b1534b360f0aabf) }
+func init() { proto.RegisterFile("task.proto", fileDescriptor_task_fc5602da2c25e8b7) }
 
-var fileDescriptor_task_5b1534b360f0aabf = []byte{
+var fileDescriptor_task_fc5602da2c25e8b7 = []byte{
 	// 544 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x52, 0xcf, 0x8b, 0xd3, 0x40,
 	0x14, 0xee, 0x24, 0x69, 0xd3, 0xbc, 0x42, 0x59, 0x06, 0x91, 0xd0, 0xc3, 0xb4, 0x14, 0x91, 0x82,

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package task;
+
+option (gogoproto.testgen_all)  = true;
+option (gogoproto.benchgen_all) = true;
+option (gogoproto.populate_all) = true;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+// Scorer defines a call to Scorer service.
+service Scorer {
+	rpc Calculate(ScorerRequest) returns (ScorerReply) {}
+}
+
+message ScorerRequest {
+	string TaskID         = 1;
+}
+
+message Score {
+	string UserID         = 1;
+	double Score          = 2;
+}
+
+message ScorerReply {
+	string TaskID         = 1;
+	repeated Score Scores = 2 [(gogoproto.nullable) = false];;
+}

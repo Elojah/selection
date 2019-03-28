@@ -24,7 +24,7 @@ func NewHandler(ctx context.Context) *Handler {
 	return &Handler{ctx: ctx}
 }
 
-// Dial starts the auth server.
+// Dial starts the api server.
 func (h *Handler) Dial(c Config) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/user", h.Users)
