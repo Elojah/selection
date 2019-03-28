@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"net"
 
 	"google.golang.org/grpc"
@@ -12,16 +11,9 @@ import (
 
 // Handler handles api routes.
 type Handler struct {
-	ctx context.Context
-
 	UserStore    user.Store
 	TaskStore    task.Store
 	TaskTagStore task.TagStore
-}
-
-// NewHandler returns a handler with context.
-func NewHandler(ctx context.Context) *Handler {
-	return &Handler{ctx: ctx}
 }
 
 // Up starts the score server.

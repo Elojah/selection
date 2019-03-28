@@ -18,6 +18,9 @@ func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx, cancel := h.ctx()
+	defer cancel()
+
 	id := r.URL.Query().Get("id")
 	logger := log.With().Str("route", "/task").Str("id", id).Str("method", "GET").Logger()
 
@@ -29,7 +32,7 @@ func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// #Retrieve task by id
-	t, err := h.TaskStore.GetTask(h.ctx, id)
+	t, err := h.TaskStore.GetTask(ctx, id)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve task")
 		http.Error(w, "store failure", http.StatusInternalServerError)

@@ -14,13 +14,13 @@ func (h *Handler) Calculate(ctx context.Context, r *task.ScorerRequest) (*task.S
 	id := r.TaskID
 
 	// #Retrieve associated task
-	t, err := h.TaskStore.GetTask(h.ctx, id)
+	t, err := h.TaskStore.GetTask(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
 	// #Retrieve associated tags
-	tags, err := h.TaskTagStore.GetTags(h.ctx, id)
+	tags, err := h.TaskTagStore.GetTags(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func (h *Handler) Calculate(ctx context.Context, r *task.ScorerRequest) (*task.S
 		Scores: make([]task.Score, len(t.Applicants)),
 	}
 	for i, applicant := range t.Applicants {
-		u, err := h.UserStore.GetUser(h.ctx, applicant.ID)
+		u, err := h.UserStore.GetUser(ctx, applicant.ID)
 		if err != nil {
 			result = multierror.Append(result, err)
 			continue

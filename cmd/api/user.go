@@ -18,6 +18,9 @@ func (h *Handler) Users(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx, cancel := h.ctx()
+	defer cancel()
+
 	id := r.URL.Query().Get("id")
 	logger := log.With().Str("route", "/user").Str("id", id).Str("method", "GET").Logger()
 
@@ -29,7 +32,7 @@ func (h *Handler) Users(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// #Retrieve user by id
-	u, err := h.UserStore.GetUser(h.ctx, id)
+	u, err := h.UserStore.GetUser(ctx, id)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve user")
 		http.Error(w, "store failure", http.StatusInternalServerError)

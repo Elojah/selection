@@ -50,7 +50,10 @@ func run(prog string, filename string) {
 	}
 
 	// #Init handler
-	h := NewHandler(ctx)
+	h := Handler{}
+	h.ctx = func() (context.Context, context.CancelFunc) {
+		return context.WithTimeout(context.Background(), time.Duration(c.MongoTimeout)*time.Second)
+	}
 	h.UserStore = userStore
 	h.TaskStore = taskStore
 	h.TaskTagStore = taskStore

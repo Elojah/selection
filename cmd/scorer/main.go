@@ -50,7 +50,7 @@ func run(prog string, filename string) {
 	}
 
 	// #Init handler
-	h := NewHandler(ctx)
+	h := Handler{}
 	h.UserStore = userStore
 	h.TaskStore = taskStore
 	h.TaskTagStore = taskStore

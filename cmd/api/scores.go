@@ -20,6 +20,9 @@ func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx, cancel := h.ctx()
+	defer cancel()
+
 	id := r.URL.Query().Get("id")
 	logger := log.With().Str("route", "/task/scores").Str("id", id).Str("method", "GET").Logger()
 
@@ -31,7 +34,7 @@ func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// #Retrieve task by id
-	t, err := h.TaskStore.GetTask(h.ctx, id)
+	t, err := h.TaskStore.GetTask(ctx, id)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve task")
 		http.Error(w, "store failure", http.StatusInternalServerError)
@@ -39,7 +42,7 @@ func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// #Retrieve associated tags
-	tags, err := h.TaskTagStore.GetTags(h.ctx, id)
+	tags, err := h.TaskTagStore.GetTags(ctx, id)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve tags")
 		http.Error(w, "store failure", http.StatusInternalServerError)
@@ -47,7 +50,7 @@ func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// #Call scorer service to retrieve matches
-	resp, err := h.TaskScorer.Calculate(h.ctx, &task.ScorerRequest{TaskID: id})
+	resp, err := h.TaskScorer.Calculate(ctx, &task.ScorerRequest{TaskID: id})
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to calculate scores")
 		http.Error(w, "calculation failure", http.StatusInternalServerError)

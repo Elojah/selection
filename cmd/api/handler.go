@@ -14,7 +14,7 @@ import (
 // Handler handles api routes.
 type Handler struct {
 	srv *http.Server
-	ctx context.Context
+	ctx func() (context.Context, context.CancelFunc)
 
 	client *grpc.ClientConn
 
@@ -22,11 +22,6 @@ type Handler struct {
 	TaskStore    task.Store
 	TaskTagStore task.TagStore
 	TaskScorer   task.ScorerClient
-}
-
-// NewHandler returns a handler with context.
-func NewHandler(ctx context.Context) *Handler {
-	return &Handler{ctx: ctx}
 }
 
 // Up starts the api server.
