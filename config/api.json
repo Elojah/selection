@@ -2,7 +2,7 @@
 	"mongo_url": "mongodb://localhost:27017",
 	"mongo_timeout": 10,
 	"address": "127.0.0.1:8080",
-	"cert": "config/server.crt",
-	"key": "config/server.key",
+	"cert": "config/localhost.crt",
+	"key": "config/localhost.key",
 	"scorer": "localhost:8081"
 }

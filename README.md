@@ -11,3 +11,9 @@ OS X & Linux & Windows:
 ```sh
 go get -u github.com/elojah/selection
 ```
+## Usage example
+```sh
+> docker-compose up # start containers
+> make import # import test data into mongo
+> curl -k X GET https://127.0.0.1:8080/task/scores?id=0E8dlOR1tqfg31jIR
+```
