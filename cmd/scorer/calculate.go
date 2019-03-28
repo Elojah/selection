@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 
 	multierror "github.com/hashicorp/go-multierror"
 
@@ -66,7 +65,5 @@ func matchTags(userTags []string, taskTags []string) float64 {
 	}
 
 	// Return count of matches / total tags of task
-	fmt.Println(userTags, taskTags)
-	fmt.Println(float64(count), float64(len(taskTags)))
 	return float64(count) / float64(len(taskTags))
 }
