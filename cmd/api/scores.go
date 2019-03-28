@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"sort"
 
 	merrors "github.com/elojah/selection/pkg/errors"
 	"github.com/elojah/selection/pkg/task"
@@ -59,6 +60,11 @@ func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 		Country:     t.Country,
 		Tags:        tags,
 	}
+
+	// #Sort applicants by score
+	sort.Slice(scores.Applicants, func(i, j int) bool {
+		return scores.Applicants[i].Score > scores.Applicants[j].Score
+	})
 
 	// #Format and respond task
 	raw, err := json.Marshal(scores)

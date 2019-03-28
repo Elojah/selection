@@ -26,7 +26,7 @@ func NewHandler(ctx context.Context) *Handler {
 
 // Up starts the score server.
 func (h *Handler) Up(c Config) error {
-	lis, err := net.Listen("tcp", c.Port)
+	lis, err := net.Listen("tcp", c.Address)
 	if err != nil {
 		return err
 	}

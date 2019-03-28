@@ -10,7 +10,7 @@ type Config struct {
 	MongoURL     string `json:"mongo_url"`
 	MongoTimeout int    `json:"mongo_timeout"`
 
-	Port string `json:"port"`
+	Address string `json:"address"`
 }
 
 // Populate reads file as JSON and populate config.

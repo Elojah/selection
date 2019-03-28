@@ -1,5 +1,5 @@
 {
 	"mongo_url": "mongodb://localhost:27017",
 	"mongo_timeout": 10,
-	"port": "8081",
+	"address": "127.0.0.1:8081"
 }

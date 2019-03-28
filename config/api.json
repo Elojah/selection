@@ -3,5 +3,6 @@
 	"mongo_timeout": 10,
 	"address": "127.0.0.1:8080",
 	"cert": "config/server.crt",
-	"key": "config/server.key"
+	"key": "config/server.key",
+	"scorer": "localhost:8081"
 }

@@ -9,11 +9,16 @@ import (
 
 // GetTags implemented with mongodb.
 func (s *Store) GetTags(ctx context.Context, id string) (task.Tags, error) {
-	var result task.Tags
+	var result mongoTag
 
 	filter := bson.M{"_id": id}
 	if err := s.tags.FindOne(ctx, filter).Decode(&result); err != nil {
 		return nil, err
 	}
-	return result, nil
+	return task.Tags(result.Tags), nil
+}
+
+type mongoTag struct {
+	ID   string   `json:"_id"`
+	Tags []string `json:"tags"`
 }
