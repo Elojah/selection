@@ -8,3 +8,25 @@ services:
       - ./docker/mongo/mongod.conf:/usr/local/etc/mongod.conf
     ports:
       - 27017:27017
+
+  # API
+  api:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    links:
+      - mongo
+
+  # Scorer
+  scorer:
+    build:
+      context: .
+      dockerfile: docker/scorer/Dockerfile
+    expose:
+      - 8081
+    links:
+      - mongo
