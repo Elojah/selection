@@ -37,9 +37,10 @@ func (h *Handler) Up(c Config) error {
 	}
 	go func() {
 		if err := h.srv.ListenAndServeTLS(c.Cert, c.Key); err != nil {
-			log.Error().Err(err).Msg("failed to start server")
+			log.Error().Err(err).Msg("failed to init server")
 		}
 	}()
+	log.Info().Msg("server listening")
 
 	var err error
 	h.client, err = grpc.Dial(c.Scorer, grpc.WithInsecure())

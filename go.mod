@@ -3,7 +3,7 @@ module github.com/elojah/selection
 go 1.12
 
 require (
-	github.com/coreos/fleet v1.0.0 // indirect
+	github.com/coreos/fleet v1.0.0
 	github.com/elojah/game_01 v0.0.2 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gogo/protobuf v1.2.1

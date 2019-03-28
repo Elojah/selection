@@ -3,6 +3,7 @@ package main
 import (
 	"net"
 
+	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 
 	"github.com/elojah/selection/pkg/task"
@@ -24,8 +25,11 @@ func (h *Handler) Up(c Config) error {
 	}
 	s := grpc.NewServer()
 	task.RegisterScorerServer(s, h)
-	if err := s.Serve(lis); err != nil {
-		return err
-	}
+	go func() {
+		if err := s.Serve(lis); err != nil {
+			log.Error().Err(err).Msg("failed to init server")
+		}
+	}()
+	log.Info().Msg("server listening")
 	return nil
 }
