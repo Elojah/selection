@@ -22,20 +22,27 @@ func run(prog string, filename string) {
 		return
 	}
 
-	ctx, f := context.WithTimeout(context.Background(), time.Duration(c.MongoTimeout)*time.Second)
-	if f != nil {
-		f()
-		return
-	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(c.MongoTimeout)*time.Second)
+	defer cancel()
 
 	mclient, err := MongoClient(ctx, c.MongoDBURL)
 	if err != nil {
-		log.Error().Err(err).Str("url", c.MongoDBURL).Msg("failed to start mongodb")
+		log.Error().Err(err).Str("url", c.MongoDBURL).Msg("failed to init mongodb client")
 		return
 	}
 
-	userStore := srg.Store{}
-	userStore.Up(mclient)
+	userStore := &srg.Store{}
+	if err := userStore.Up(mclient); err != nil {
+		log.Error().Err(err).Msg("failed to init mongodb user store")
+		return
+	}
+
+	h := NewHandler(ctx)
+	h.UserStore = userStore
+	if err := h.Dial(c); err != nil {
+		log.Error().Err(err).Msg("failed to init http handler")
+		return
+	}
 }
 
 func main() {

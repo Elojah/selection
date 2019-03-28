@@ -1,3 +1,7 @@
 {
-	"mongodb_url": "mongodb://localhost:27017"
+	"mongodb_url": "mongodb://localhost:27017",
+	"mongodb_timeout": 10,
+	"address": "127.0.0.1:8080",
+	"cert": "config/server.crt",
+	"key": "config/server.key"
 }

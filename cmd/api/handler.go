@@ -1,21 +1,33 @@
 package main
 
 import (
+	"context"
 	"net/http"
 
-	"github.com/coreos/fleet/log"
 	"github.com/elojah/selection/pkg/user"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Handler handles api routes.
 type Handler struct {
-	user.Store
+	srv *http.Server
+	ctx context.Context
+
+	UserStore user.Store
+}
+
+// NewHandler returns a handler with context.
+func NewHandler(ctx context.Context) *Handler {
+	return &Handler{ctx: ctx}
 }
 
 // Dial starts the auth server.
 func (h *Handler) Dial(c Config) error {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/users", h.Users)
+	mux.HandleFunc("/user", h.Users)
+	// mux.HandleFunc("/task/{id}", h.Tasks)
+	// mux.HandleFunc("/task/{id}/match", h.Match)
 
 	h.srv = &http.Server{
 		Addr:    c.Address,
