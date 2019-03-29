@@ -31,7 +31,7 @@ func (h *Handler) Users(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// #Retrieve user by id
+	// #Fetch user by id
 	u, err := h.UserStore.GetUser(ctx, id)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve user")

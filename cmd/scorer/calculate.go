@@ -5,7 +5,9 @@ import (
 
 	multierror "github.com/hashicorp/go-multierror"
 
+	"github.com/elojah/selection/pkg/errors"
 	"github.com/elojah/selection/pkg/task"
+	"github.com/elojah/selection/pkg/user"
 )
 
 // Calculate handle score calculation route.
@@ -13,16 +15,31 @@ func (h *Handler) Calculate(ctx context.Context, r *task.ScorerRequest) (*task.S
 
 	id := r.TaskID
 
-	// #Retrieve associated task
+	// #Fetch associated task
 	t, err := h.TaskStore.GetTask(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
-	// #Retrieve associated tags
+	// #Fetch associated tags
 	tags, err := h.TaskTagStore.GetTags(ctx, id)
 	if err != nil {
 		return nil, err
+	}
+
+	// #Fetch all applicants users
+	ids := make([]string, len(t.Applicants))
+	for i, app := range t.Applicants {
+		ids[i] = app.ID
+	}
+	users, err := h.UserStore.GetUsers(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+	// convert users into map to ease access
+	usersMap := make(map[string]user.U)
+	for _, u := range users {
+		usersMap[u.ID] = u
 	}
 
 	// #Calculate match percentage with all applicants
@@ -32,9 +49,9 @@ func (h *Handler) Calculate(ctx context.Context, r *task.ScorerRequest) (*task.S
 		Scores: make([]task.Score, len(t.Applicants)),
 	}
 	for i, applicant := range t.Applicants {
-		u, err := h.UserStore.GetUser(ctx, applicant.ID)
-		if err != nil {
-			result = multierror.Append(result, err)
+		u, ok := usersMap[applicant.ID]
+		if !ok {
+			result = multierror.Append(result, errors.ErrNotFound{Collection: "users", Index: applicant.ID})
 			continue
 		}
 		reply.Scores[i] = task.Score{

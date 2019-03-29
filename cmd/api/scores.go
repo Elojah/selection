@@ -33,7 +33,7 @@ func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// #Retrieve task by id
+	// #Fetch task by id
 	t, err := h.TaskStore.GetTask(ctx, id)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve task")
@@ -41,7 +41,7 @@ func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// #Retrieve associated tags
+	// #Fetch associated tags
 	tags, err := h.TaskTagStore.GetTags(ctx, id)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve tags")

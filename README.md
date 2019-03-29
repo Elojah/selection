@@ -17,3 +17,11 @@ go get -u github.com/elojah/selection
 > make import # import test data into mongo
 > curl -k X GET https://127.0.0.1:8080/task/scores?id=0E8dlOR1tqfg31jIR
 ```
+
+## TODO
+
+- [x] Add tags to get task (API)
+- [ ] Batch users retrieve in scores calculation (Scorer)
+- [ ] Add more routes (get all, get by id) (API)
+- [ ] Debug HTTPS Docker (API)
+- [ ] Add errors.Wrap for error context

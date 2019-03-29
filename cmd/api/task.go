@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	merrors "github.com/elojah/selection/pkg/errors"
+	"github.com/elojah/selection/pkg/task"
 	"github.com/rs/zerolog/log"
 )
 
@@ -31,7 +32,7 @@ func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// #Retrieve task by id
+	// #Fetch task by id
 	t, err := h.TaskStore.GetTask(ctx, id)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve task")
@@ -39,8 +40,16 @@ func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// #Fetch associated tags
+	tags, err := h.TaskTagStore.GetTags(ctx, id)
+	if err != nil {
+		logger.Error().Err(err).Msg("failed to retrieve task tags")
+		http.Error(w, "store failure", http.StatusInternalServerError)
+		return
+	}
+
 	// #Format and respond task
-	raw, err := json.Marshal(t)
+	raw, err := json.Marshal(task.DTO{Task: t, Tags: tags})
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to marshal response")
 		http.Error(w, "formatting failure", http.StatusInternalServerError)
