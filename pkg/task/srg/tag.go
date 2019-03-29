@@ -46,22 +46,22 @@ func (s *Store) GetTagsByID(ctx context.Context, ids []string) ([]task.Tags, err
 	defer cur.Close(ctx)
 
 	var merr *multierror.Error
-	var tasks []task.Tags
+	var tags []task.Tags
 	for cur.Next(ctx) {
 		var result mongoTag
 		if err := cur.Decode(&result); err != nil {
 			merr = multierror.Append(merr, err)
 			continue
 		}
-		tasks = append(tasks, result.Domain())
+		tags = append(tags, result.Domain())
 	}
 
-	return tasks, merr.ErrorOrNil()
+	return tags, merr.ErrorOrNil()
 }
 
 type mongoTag struct {
-	ID   string   `json:"_id"`
-	Tags []string `json:"tags"`
+	ID   string   `bson:"_id"`
+	Tags []string `bson:"tags"`
 }
 
 func (t mongoTag) Domain() task.Tags {

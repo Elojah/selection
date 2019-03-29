@@ -71,7 +71,7 @@ type mongoUser struct {
 }
 
 // Domain converts a mongodb user into a domain user.
-func (u *mongoUser) Domain() user.U {
+func (u mongoUser) Domain() user.U {
 	return user.U{
 		ID:               u.ID,
 		CreatedAt:        u.CreatedAt,

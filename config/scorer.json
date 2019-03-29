@@ -1,5 +1,5 @@
 {
-	"mongo_url": "mongodb://0.0.0.0:27017",
+	"mongo_url": "mongodb://mongo:27017",
 	"mongo_timeout": 10,
 	"address": "0.0.0.0:8081"
 }

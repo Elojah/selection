@@ -6,6 +6,8 @@ services:
     build: docker/mongo
     volumes:
       - ./docker/mongo/mongod.conf:/usr/local/etc/mongod.conf
+    expose:
+      - 27017
     ports:
       - 27017:27017
 

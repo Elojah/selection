@@ -97,7 +97,7 @@ func linkTaskTags(tasks []task.T, tags []task.Tags) []task.DTO {
 		taskTags, ok := tagsMap[t.ID]
 		if !ok {
 			// no tags found for this task, raise an error ?
-			continue
+			taskTags.Tags = []string{}
 		}
 		dto[i] = task.DTO{
 			Task: t,

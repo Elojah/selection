@@ -27,7 +27,9 @@ go get -u github.com/elojah/selection
 /task #all tasks
 /task?ids=Hui98id,ijfds8HI #tasks by id
 ```
-
+```
+/task/scores?id=
+```
 ## TODO
 
 - [x] Add tags to get task (API)

@@ -92,7 +92,7 @@ type mongoTask struct {
 }
 
 // Domain converts a mongodb task into a domain task.
-func (t *mongoTask) Domain() task.T {
+func (t mongoTask) Domain() task.T {
 	applicants := make([]task.Applicants, len(t.Applicants))
 	for i, app := range t.Applicants {
 		applicants[i] = task.Applicants{
