@@ -21,19 +21,19 @@ go get -u github.com/elojah/selection
 ## API
 ```
 /user #all users
-/user?ids=Hui98id,ijfds8HI #users by id
+/user?ids=eLCbLZMwPrWM24fZ9,fZueTmkoyeeM8hfgS #users by id
 ```
 ```
 /task #all tasks
-/task?ids=Hui98id,ijfds8HI #tasks by id
+/task?ids=0R7p5AZpxMmffUU7k,0E8dlOR1tqfg31jIR #tasks by id
 ```
 ```
-/task/scores?id=
+/task/scores?id=0R7p5AZpxMmffUU7k
 ```
 ## TODO
 
 - [x] Add tags to get task (API)
 - [x] Batch users retrieve in scores calculation (Scorer)
 - [x] Debug HTTPS Docker (API)
-- [ ] Add more routes (get all, get by id) (API)
+- [x] Add more routes (get all, get by id) (API)
 - [ ] Add errors.Wrap for error context
