@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/elojah/selection/pkg/errors"
 	"github.com/elojah/selection/pkg/user"
 	multierror "github.com/hashicorp/go-multierror"
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,11 +23,11 @@ func (s *Store) GetUser(ctx context.Context, id string) (user.U, error) {
 // GetUsers implemented with mongodb.
 func (s *Store) GetUsers(ctx context.Context, ids []string) ([]user.U, error) {
 
-	filter := make(bson.D, len(ids))
+	a := make(bson.A, len(ids))
 	for i, id := range ids {
-		filter[i] = bson.E{Key: "_id", Value: id}
+		a[i] = id
 	}
-
+	filter := bson.D{{"_id", bson.D{{"$in", a}}}}
 	cur, err := s.user.Find(ctx, filter)
 	if err != nil {
 		return nil, err
@@ -40,7 +39,7 @@ func (s *Store) GetUsers(ctx context.Context, ids []string) ([]user.U, error) {
 	for cur.Next(ctx) {
 		var result mongoUser
 		if err := cur.Decode(&result); err != nil {
-			merr = multierror.Append(merr, errors.ErrNotFound{Collection: "users", Index: "unknown"})
+			merr = multierror.Append(merr, err)
 			continue
 		}
 		users = append(users, result.Domain())
