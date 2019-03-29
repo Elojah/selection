@@ -63,6 +63,7 @@ proto:
 	$(info $(M) running protoc…) @
 	$Q cd pkg/user && protoc -I=. -I=$(GOPATH)/src -I=$(GOPATH)/src/github.com/gogo/protobuf/protobuf --gogoslick_out=Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types:. user.proto
 	$Q cd pkg/task && protoc -I=. -I=$(GOPATH)/src -I=$(GOPATH)/src/github.com/gogo/protobuf/protobuf --gogoslick_out=Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types:. task.proto
+	$Q cd pkg/task && protoc -I=. -I=$(GOPATH)/src -I=$(GOPATH)/src/github.com/gogo/protobuf/protobuf --gogoslick_out=. tags.proto
 	$Q cd pkg/task && protoc -I=. -I=$(GOPATH)/src -I=$(GOPATH)/src/github.com/gogo/protobuf/protobuf --gogoslick_out=. scores.proto
 	$Q cd pkg/task && protoc -I=. -I=$(GOPATH)/src -I=$(GOPATH)/src/github.com/gogo/protobuf/protobuf --gogoslick_out=plugins=grpc:. scorer.proto
 	$Q cd pkg/task && protoc -I=. -I=$(GOPATH)/src -I=$(GOPATH)/src/github.com/gogo/protobuf/protobuf --gogoslick_out=. dto.proto

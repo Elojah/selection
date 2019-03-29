@@ -4,6 +4,6 @@ import "context"
 
 // Store to retrieve users by all/batch/ID.
 type Store interface {
-	GetUser(context.Context, string) (U, error)
-	GetUsers(context.Context, []string) ([]U, error)
+	GetAllUsers(context.Context) ([]U, error)
+	GetUsersByID(context.Context, []string) ([]U, error)
 }

@@ -16,23 +16,31 @@ func (h *Handler) Calculate(ctx context.Context, r *task.ScorerRequest) (*task.S
 	id := r.TaskID
 
 	// #Fetch associated task
-	t, err := h.TaskStore.GetTask(ctx, id)
+	ts, err := h.TaskStore.GetTasksByID(ctx, []string{id})
 	if err != nil {
 		return nil, err
 	}
+	if len(ts) == 0 {
+		return nil, errors.ErrNotFound{Collection: "task", Index: id}
+	}
+	t := ts[0]
 
 	// #Fetch associated tags
-	tags, err := h.TaskTagStore.GetTags(ctx, id)
+	tags, err := h.TaskTagStore.GetTagsByID(ctx, []string{id})
 	if err != nil {
 		return nil, err
 	}
+	if len(tags) == 0 {
+		return nil, errors.ErrNotFound{Collection: "tags", Index: id}
+	}
+	taskTags := tags[0]
 
 	// #Fetch all applicants users
 	ids := make([]string, len(t.Applicants))
 	for i, app := range t.Applicants {
 		ids[i] = app.ID
 	}
-	users, err := h.UserStore.GetUsers(ctx, ids)
+	users, err := h.UserStore.GetUsersByID(ctx, ids)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +64,7 @@ func (h *Handler) Calculate(ctx context.Context, r *task.ScorerRequest) (*task.S
 		}
 		reply.Scores[i] = task.Score{
 			SiderID:   applicant.ID,
-			Score:     matchTags(u.Tags, tags),
+			Score:     matchTags(u.Tags, taskTags.Tags),
 			FirstName: u.FirstName,
 			LastName:  u.LastName,
 		}

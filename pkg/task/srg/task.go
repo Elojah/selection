@@ -5,18 +5,59 @@ import (
 	"time"
 
 	"github.com/elojah/selection/pkg/task"
+	multierror "github.com/hashicorp/go-multierror"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// GetTask implemented with mongodb.
-func (s *Store) GetTask(ctx context.Context, id string) (task.T, error) {
-	var result mongoTask
+// GetAllTasks implemented with mongodb.
+func (s *Store) GetAllTasks(ctx context.Context) ([]task.T, error) {
 
-	filter := bson.M{"_id": id}
-	if err := s.task.FindOne(ctx, filter).Decode(&result); err != nil {
-		return task.T{}, err
+	cur, err := s.task.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
 	}
-	return result.Domain()
+	defer cur.Close(ctx)
+
+	var merr *multierror.Error
+	var tasks []task.T
+	for cur.Next(ctx) {
+		var result mongoTask
+		if err := cur.Decode(&result); err != nil {
+			merr = multierror.Append(merr, err)
+			continue
+		}
+		tasks = append(tasks, result.Domain())
+	}
+
+	return tasks, merr.ErrorOrNil()
+}
+
+// GetTasksByID implemented with mongodb.
+func (s *Store) GetTasksByID(ctx context.Context, ids []string) ([]task.T, error) {
+
+	a := make(bson.A, len(ids))
+	for i, id := range ids {
+		a[i] = id
+	}
+	filter := bson.D{{Key: "_id", Value: bson.D{{Key: "$in", Value: a}}}}
+	cur, err := s.task.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+
+	var merr *multierror.Error
+	var tasks []task.T
+	for cur.Next(ctx) {
+		var result mongoTask
+		if err := cur.Decode(&result); err != nil {
+			merr = multierror.Append(merr, err)
+			continue
+		}
+		tasks = append(tasks, result.Domain())
+	}
+
+	return tasks, merr.ErrorOrNil()
 }
 
 type mongoInfo struct {
@@ -51,7 +92,7 @@ type mongoTask struct {
 }
 
 // Domain converts a mongodb task into a domain task.
-func (t *mongoTask) Domain() (task.T, error) {
+func (t *mongoTask) Domain() task.T {
 	applicants := make([]task.Applicants, len(t.Applicants))
 	for i, app := range t.Applicants {
 		applicants[i] = task.Applicants{
@@ -86,5 +127,5 @@ func (t *mongoTask) Domain() (task.T, error) {
 		UpdatedAt:   t.UpdatedAt,
 		Description: t.Description,
 		Applicants:  applicants,
-	}, nil
+	}
 }

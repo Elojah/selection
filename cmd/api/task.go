@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
-	merrors "github.com/elojah/selection/pkg/errors"
 	"github.com/elojah/selection/pkg/task"
 	"github.com/rs/zerolog/log"
 )
@@ -22,34 +22,54 @@ func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := h.ctx()
 	defer cancel()
 
-	id := r.URL.Query().Get("id")
-	logger := log.With().Str("route", "/task").Str("id", id).Str("method", "GET").Logger()
+	idsParam := r.URL.Query().Get("ids")
+	logger := log.With().Str("route", "/task").Str("ids", idsParam).Str("method", "GET").Logger()
+
+	var tasks []task.T
+	var tags []task.Tags
 
 	// #Check id parameter is not empty
-	if id == "" {
-		logger.Error().Err(merrors.ErrMissingParam{Name: "id"}).Msg("invalid parameter")
-		http.Error(w, "invalid parameter", http.StatusBadRequest)
-		return
+	if idsParam == "" {
+		// #Fetch all tasks
+		var err error
+		tasks, err = h.TaskStore.GetAllTasks(ctx)
+		if err != nil {
+			logger.Error().Err(err).Msg("failed to retrieve tasks")
+			http.Error(w, "store failure", http.StatusInternalServerError)
+			return
+		}
+
+		// #Fetch associated tags
+		tags, err = h.TaskTagStore.GetAllTags(ctx)
+		if err != nil {
+			logger.Error().Err(err).Msg("failed to retrieve task tags")
+			http.Error(w, "store failure", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		// #Fetch tasks by id
+		var err error
+		ids := strings.Split(idsParam, ",")
+		tasks, err = h.TaskStore.GetTasksByID(ctx, ids)
+		if err != nil {
+			logger.Error().Err(err).Msg("failed to retrieve task")
+			http.Error(w, "store failure", http.StatusInternalServerError)
+			return
+		}
+
+		// #Fetch associated tags
+		tags, err = h.TaskTagStore.GetTagsByID(ctx, ids)
+		if err != nil {
+			logger.Error().Err(err).Msg("failed to retrieve task tags")
+			http.Error(w, "store failure", http.StatusInternalServerError)
+			return
+		}
 	}
 
-	// #Fetch task by id
-	t, err := h.TaskStore.GetTask(ctx, id)
-	if err != nil {
-		logger.Error().Err(err).Msg("failed to retrieve task")
-		http.Error(w, "store failure", http.StatusInternalServerError)
-		return
-	}
-
-	// #Fetch associated tags
-	tags, err := h.TaskTagStore.GetTags(ctx, id)
-	if err != nil {
-		logger.Error().Err(err).Msg("failed to retrieve task tags")
-		http.Error(w, "store failure", http.StatusInternalServerError)
-		return
-	}
+	dto := linkTaskTags(tasks, tags)
 
 	// #Format and respond task
-	raw, err := json.Marshal(task.DTO{Task: t, Tags: tags})
+	raw, err := json.Marshal(dto)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to marshal response")
 		http.Error(w, "formatting failure", http.StatusInternalServerError)
@@ -62,4 +82,28 @@ func (h *Handler) Tasks(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	logger.Info().Msg("success")
+}
+
+func linkTaskTags(tasks []task.T, tags []task.Tags) []task.DTO {
+
+	// #Convert tags into map to ease next access
+	tagsMap := make(map[string]task.Tags, len(tags))
+	for _, t := range tags {
+		tagsMap[t.ID] = t
+	}
+
+	dto := make([]task.DTO, len(tasks))
+	for i, t := range tasks {
+		taskTags, ok := tagsMap[t.ID]
+		if !ok {
+			// no tags found for this task, raise an error ?
+			continue
+		}
+		dto[i] = task.DTO{
+			Task: t,
+			Tags: taskTags.Tags,
+		}
+	}
+
+	return dto
 }

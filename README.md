@@ -18,6 +18,16 @@ go get -u github.com/elojah/selection
 > curl -k X GET https://127.0.0.1:8080/task/scores?id=0E8dlOR1tqfg31jIR
 ```
 
+## API
+```
+/user #all users
+/user?ids=Hui98id,ijfds8HI #users by id
+```
+```
+/task #all tasks
+/task?ids=Hui98id,ijfds8HI #tasks by id
+```
+
 ## TODO
 
 - [x] Add tags to get task (API)

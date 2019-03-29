@@ -9,19 +9,31 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// GetUser implemented with mongodb.
-func (s *Store) GetUser(ctx context.Context, id string) (user.U, error) {
-	var result mongoUser
+// GetAllUsers implemented with mongodb.
+func (s *Store) GetAllUsers(ctx context.Context) ([]user.U, error) {
 
-	filter := bson.M{"_id": id}
-	if err := s.user.FindOne(ctx, filter).Decode(&result); err != nil {
-		return user.U{}, err
+	cur, err := s.user.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
 	}
-	return result.Domain(), nil
+	defer cur.Close(ctx)
+
+	var merr *multierror.Error
+	var users []user.U
+	for cur.Next(ctx) {
+		var result mongoUser
+		if err := cur.Decode(&result); err != nil {
+			merr = multierror.Append(merr, err)
+			continue
+		}
+		users = append(users, result.Domain())
+	}
+
+	return users, merr.ErrorOrNil()
 }
 
-// GetUsers implemented with mongodb.
-func (s *Store) GetUsers(ctx context.Context, ids []string) ([]user.U, error) {
+// GetUsersByID implemented with mongodb.
+func (s *Store) GetUsersByID(ctx context.Context, ids []string) ([]user.U, error) {
 
 	a := make(bson.A, len(ids))
 	for i, id := range ids {

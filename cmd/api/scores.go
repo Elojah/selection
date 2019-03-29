@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"sort"
 
+	"github.com/elojah/selection/pkg/errors"
 	merrors "github.com/elojah/selection/pkg/errors"
 	"github.com/elojah/selection/pkg/task"
 	"github.com/rs/zerolog/log"
@@ -34,20 +35,32 @@ func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// #Fetch task by id
-	t, err := h.TaskStore.GetTask(ctx, id)
+	ts, err := h.TaskStore.GetTasksByID(ctx, []string{id})
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve task")
 		http.Error(w, "store failure", http.StatusInternalServerError)
 		return
 	}
+	if len(ts) == 0 {
+		logger.Error().Err(errors.ErrNotFound{Collection: "task", Index: id}).Msg("failed to retrieve task")
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
+	t := ts[0]
 
 	// #Fetch associated tags
-	tags, err := h.TaskTagStore.GetTags(ctx, id)
+	tags, err := h.TaskTagStore.GetTagsByID(ctx, []string{id})
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to retrieve tags")
 		http.Error(w, "store failure", http.StatusInternalServerError)
 		return
 	}
+	if len(ts) == 0 {
+		logger.Error().Err(errors.ErrNotFound{Collection: "tags", Index: id}).Msg("failed to retrieve tags")
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
+	taskTags := tags[0]
 
 	// #Call scorer service to retrieve matches
 	resp, err := h.TaskScorer.Calculate(ctx, &task.ScorerRequest{TaskID: id})
@@ -61,7 +74,7 @@ func (h *Handler) Scores(w http.ResponseWriter, r *http.Request) {
 		Applicants:  resp.Scores,
 		Description: t.Description,
 		Country:     t.Country,
-		Tags:        tags,
+		Tags:        taskTags.Tags,
 	}
 
 	// #Sort applicants by score

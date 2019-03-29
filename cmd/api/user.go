@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
-	merrors "github.com/elojah/selection/pkg/errors"
+	"github.com/elojah/selection/pkg/user"
 	"github.com/rs/zerolog/log"
 )
 
@@ -21,26 +22,40 @@ func (h *Handler) Users(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := h.ctx()
 	defer cancel()
 
-	id := r.URL.Query().Get("id")
-	logger := log.With().Str("route", "/user").Str("id", id).Str("method", "GET").Logger()
+	idsParam := r.URL.Query().Get("ids")
+	logger := log.With().Str("route", "/user").Str("ids", idsParam).Str("method", "GET").Logger()
 
-	// #Check id parameter is not empty
-	if id == "" {
-		logger.Error().Err(merrors.ErrMissingParam{Name: "id"}).Msg("invalid parameter")
-		http.Error(w, "invalid parameter", http.StatusBadRequest)
-		return
+	var users []user.U
+
+	// #Check if id parameter is set
+	if idsParam == "" {
+		// #Fetch all users
+		var err error
+		users, err = h.UserStore.GetAllUsers(ctx)
+		if err != nil {
+			logger.Error().Err(err).Msg("failed to retrieve users")
+			http.Error(w, "store failure", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		// #Fetch users by id
+		var err error
+		ids := strings.Split(idsParam, ",")
+		users, err = h.UserStore.GetUsersByID(ctx, ids)
+		if err != nil {
+			logger.Error().Err(err).Msg("failed to retrieve user")
+			http.Error(w, "store failure", http.StatusInternalServerError)
+			return
+		}
 	}
 
-	// #Fetch user by id
-	u, err := h.UserStore.GetUser(ctx, id)
-	if err != nil {
-		logger.Error().Err(err).Msg("failed to retrieve user")
-		http.Error(w, "store failure", http.StatusInternalServerError)
-		return
+	// #If users is nil, respond with an empty array instead of null
+	if users == nil {
+		users = []user.U{}
 	}
 
 	// #Format and respond user
-	raw, err := json.Marshal(u)
+	raw, err := json.Marshal(users)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to marshal response")
 		http.Error(w, "formatting failure", http.StatusInternalServerError)
