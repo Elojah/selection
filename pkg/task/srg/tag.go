@@ -39,7 +39,7 @@ func (s *Store) GetTagsByID(ctx context.Context, ids []string) ([]task.Tags, err
 		a[i] = id
 	}
 	filter := bson.D{{Key: "_id", Value: bson.D{{Key: "$in", Value: a}}}}
-	cur, err := s.task.Find(ctx, filter)
+	cur, err := s.tags.Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}

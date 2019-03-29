@@ -75,6 +75,11 @@ func (h *Handler) Calculate(ctx context.Context, r *task.ScorerRequest) (*task.S
 
 func matchTags(userTags []string, taskTags []string) float64 {
 
+	// #Divide by 0 security
+	if len(taskTags) == 0 {
+		return 0
+	}
+
 	// #Transform user tags into map
 	tagsMap := make(map[string]struct{}, len(userTags))
 	for _, tag := range userTags {
