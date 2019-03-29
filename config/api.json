@@ -4,5 +4,5 @@
 	"address": "127.0.0.1:8080",
 	"cert": "config/localhost.crt",
 	"key": "config/localhost.key",
-	"scorer": "localhost:8081"
+	"scorer": "0.0.0.0:8081"
 }

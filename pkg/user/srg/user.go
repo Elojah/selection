@@ -27,7 +27,7 @@ func (s *Store) GetUsers(ctx context.Context, ids []string) ([]user.U, error) {
 	for i, id := range ids {
 		a[i] = id
 	}
-	filter := bson.D{{"_id", bson.D{{"$in", a}}}}
+	filter := bson.D{{Key: "_id", Value: bson.D{{Key: "$in", Value: a}}}}
 	cur, err := s.user.Find(ctx, filter)
 	if err != nil {
 		return nil, err

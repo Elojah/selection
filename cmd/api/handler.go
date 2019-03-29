@@ -36,7 +36,7 @@ func (h *Handler) Up(c Config) error {
 		Handler: mux,
 	}
 	go func() {
-		if err := h.srv.ListenAndServeTLS(c.Cert, c.Key); err != nil {
+		if err := h.srv.ListenAndServe(); err != nil {
 			log.Error().Err(err).Msg("failed to init server")
 		}
 	}()

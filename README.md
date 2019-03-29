@@ -22,6 +22,6 @@ go get -u github.com/elojah/selection
 
 - [x] Add tags to get task (API)
 - [x] Batch users retrieve in scores calculation (Scorer)
-- [ ] Add more routes (get all, get by id) (API)
 - [ ] Debug HTTPS Docker (API)
+- [ ] Add more routes (get all, get by id) (API)
 - [ ] Add errors.Wrap for error context
